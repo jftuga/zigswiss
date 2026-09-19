@@ -1,0 +1,16 @@
+# Zig build cache and install prefix
+.zig-cache/
+zig-out/
+
+# Dependencies fetched by the package manager (recreated by `zig build`)
+zig-pkg/
+
+# Release archives made by `make dist`
+dist/
+
+# Machine-specific Claude Code settings
+.claude/settings.local.json
+
+# Scratch files
+PR.md
+.DS_Store

@@ -1,0 +1,45 @@
+# CI for zigswiss: checks formatting, builds, and runs the unit tests on Linux
+# and macOS with the exact Zig version the project targets.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v6
+
+      - name: Set up Zig
+        uses: mlugg/setup-zig@v2
+        with:
+          version: 0.16.0
+
+      - name: Check formatting
+        run: zig fmt --check build.zig src
+
+      - name: Build
+        run: zig build
+
+      - name: Run tests
+        run: zig build test --summary all
+
+      - name: Smoke test
+        run: |
+          ./zig-out/bin/zigswiss version
+          echo hello | ./zig-out/bin/zigswiss hash
